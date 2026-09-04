@@ -520,7 +520,10 @@ class TestPlatoHelper(TestCase):
                 template_id=template_id,
                 compose_data=self.compose_data,
                 composed_file_target=tmp_file.name,
-                mime_type="application/pdf", page=1, resize_height=100, resize_width=100,
+                mime_type="application/pdf",
+                page=1,
+                resize_height=100,
+                resize_width=100,
             )
             self.assertEqual(tmp_file.read(), expected_file)
 
@@ -546,7 +549,9 @@ class TestPlatoHelper(TestCase):
                 template_id=template_id,
                 compose_data=self.compose_data,
                 composed_file_target=tmp_file.name,
-                mime_type="application/pdf", page=1, wrong_param="wrong",
+                mime_type="application/pdf",
+                page=1,
+                wrong_param="wrong",
             )
             self.assertEqual(tmp_file.read(), expected_file)
         mock_requests.post.assert_not_called()
