@@ -111,7 +111,7 @@ class TestPlatoHelper(TestCase):
 
         template_id = "ranger_certificate"
         file = self.plato_helper.compose(template_id=template_id, compose_data=self.compose_data)
-        mock_requests.post.assert_called_with(f"{PLATO_HOST}/template/{template_id}/compose",
+        mock_requests.post.assert_called_with(f"{PLATO_HOST}/templates/{template_id}/compose",
                                               headers={'accept': 'application/pdf'},
                                               json=self.compose_data, params={}, timeout=DEFAULT_TIMEOUT)
         self.assertEqual(file, expected_file)
@@ -128,7 +128,7 @@ class TestPlatoHelper(TestCase):
         # all optional params
         file = self.plato_helper.compose(template_id=template_id, compose_data=self.compose_data, mime_type="image/png",
                                          page=1, resize_height=100, resize_width=100)
-        mock_requests.post.assert_called_with(f"{PLATO_HOST}/template/{template_id}/compose",
+        mock_requests.post.assert_called_with(f"{PLATO_HOST}/templates/{template_id}/compose",
                                               headers={'accept': 'image/png'},
                                               json=self.compose_data, params={'page': 1, 'height': 100, 'width': 100},
                                               timeout=DEFAULT_TIMEOUT)
@@ -137,7 +137,7 @@ class TestPlatoHelper(TestCase):
         # only one optional param
         file = self.plato_helper.compose(template_id=template_id, compose_data=self.compose_data, mime_type="image/png",
                                          page=1)
-        mock_requests.post.assert_called_with(f"{PLATO_HOST}/template/{template_id}/compose",
+        mock_requests.post.assert_called_with(f"{PLATO_HOST}/templates/{template_id}/compose",
                                               headers={'accept': 'image/png'},
                                               json=self.compose_data, params={'page': 1},
                                               timeout=DEFAULT_TIMEOUT)
@@ -152,7 +152,7 @@ class TestPlatoHelper(TestCase):
         with self.assertRaises(PlatoUnavailable):
             file = self.plato_helper.compose(template_id=template_id, compose_data=self.compose_data)
             self.assertIsNone(file)
-        mock_requests.post.assert_called_with(f"{PLATO_HOST}/template/{template_id}/compose",
+        mock_requests.post.assert_called_with(f"{PLATO_HOST}/templates/{template_id}/compose",
                                               headers={'accept': 'application/pdf'},
                                               json=self.compose_data, params={}, timeout=DEFAULT_TIMEOUT)
 
@@ -168,7 +168,7 @@ class TestPlatoHelper(TestCase):
             file = self.plato_helper.compose(template_id=template_id, compose_data=self.compose_data)
             self.assertIsNone(file)
 
-        mock_requests.post.assert_called_with(f"{PLATO_HOST}/template/{template_id}/compose",
+        mock_requests.post.assert_called_with(f"{PLATO_HOST}/templates/{template_id}/compose",
                                               headers={'accept': 'application/pdf'},
                                               json=self.compose_data, params={}, timeout=DEFAULT_TIMEOUT)
 
@@ -182,7 +182,7 @@ class TestPlatoHelper(TestCase):
 
         template_id = "ranger_certificate"
         file = self.plato_helper.template_example(template_id=template_id)
-        mock_requests.get.assert_called_with(f"{PLATO_HOST}/template/{template_id}/example",
+        mock_requests.get.assert_called_with(f"{PLATO_HOST}/templates/{template_id}/example",
                                              headers={'accept': 'application/pdf'}, params={}, timeout=DEFAULT_TIMEOUT)
         self.assertEqual(file, expected_file)
 
@@ -198,7 +198,7 @@ class TestPlatoHelper(TestCase):
         # all optional params
         file = self.plato_helper.template_example(template_id=template_id, mime_type="image/png",
                                                   page=1, resize_height=100, resize_width=100)
-        mock_requests.get.assert_called_with(f"{PLATO_HOST}/template/{template_id}/example",
+        mock_requests.get.assert_called_with(f"{PLATO_HOST}/templates/{template_id}/example",
                                              headers={'accept': 'image/png'},
                                              params={'page': 1, 'height': 100, 'width': 100},
                                              timeout=DEFAULT_TIMEOUT)
@@ -206,7 +206,7 @@ class TestPlatoHelper(TestCase):
 
         # only one optional param
         file = self.plato_helper.template_example(template_id=template_id, mime_type="image/png", page=1)
-        mock_requests.get.assert_called_with(f"{PLATO_HOST}/template/{template_id}/example",
+        mock_requests.get.assert_called_with(f"{PLATO_HOST}/templates/{template_id}/example",
                                              headers={'accept': 'image/png'},
                                              params={'page': 1},
                                              timeout=DEFAULT_TIMEOUT)
@@ -221,7 +221,7 @@ class TestPlatoHelper(TestCase):
         with self.assertRaises(PlatoUnavailable):
             file = self.plato_helper.template_example(template_id=template_id)
             self.assertIsNone(file)
-        mock_requests.get.assert_called_with(f"{PLATO_HOST}/template/{template_id}/example",
+        mock_requests.get.assert_called_with(f"{PLATO_HOST}/templates/{template_id}/example",
                                              headers={'accept': 'application/pdf'},
                                              params={}, timeout=DEFAULT_TIMEOUT)
 
@@ -237,7 +237,7 @@ class TestPlatoHelper(TestCase):
             file = self.plato_helper.template_example(template_id=template_id)
             self.assertIsNone(file)
 
-        mock_requests.get.assert_called_with(f"{PLATO_HOST}/template/{template_id}/example",
+        mock_requests.get.assert_called_with(f"{PLATO_HOST}/templates/{template_id}/example",
                                              headers={'accept': 'application/pdf'},
                                              params={}, timeout=DEFAULT_TIMEOUT)
 
@@ -437,7 +437,7 @@ class TestPlatoHelper(TestCase):
             self.plato_helper.compose_to_file(template_id=template_id, compose_data=self.compose_data,
                                               composed_file_target=tmp_file.name)
 
-            mock_requests.post.assert_called_with(f"{PLATO_HOST}/template/{template_id}/compose",
+            mock_requests.post.assert_called_with(f"{PLATO_HOST}/templates/{template_id}/compose",
                                                   headers={'accept': 'application/pdf'},
                                                   json=self.compose_data, params={}, timeout=DEFAULT_TIMEOUT)
             self.assertEqual(tmp_file.read(), expected_file)
@@ -458,7 +458,7 @@ class TestPlatoHelper(TestCase):
                                                  'resize_height': 100, 'resize_width': 100})
             self.assertEqual(tmp_file.read(), expected_file)
 
-        mock_requests.post.assert_called_with(f"{PLATO_HOST}/template/{template_id}/compose",
+        mock_requests.post.assert_called_with(f"{PLATO_HOST}/templates/{template_id}/compose",
                                               headers={'accept': 'application/pdf'},
                                               json=self.compose_data, params={'page': 1,
                                                                               'height': 100,
@@ -495,7 +495,7 @@ class TestPlatoHelper(TestCase):
                                                   composed_file_target=tmp_file.name)
                 self.assertEqual(initial_file, tmp_file)
 
-        mock_requests.post.assert_called_with(f"{PLATO_HOST}/template/{template_id}/compose",
+        mock_requests.post.assert_called_with(f"{PLATO_HOST}/templates/{template_id}/compose",
                                               headers={'accept': 'application/pdf'},
                                               json=self.compose_data, params={}, timeout=DEFAULT_TIMEOUT)
 
@@ -514,6 +514,6 @@ class TestPlatoHelper(TestCase):
                                                   composed_file_target=tmp_file.name)
                 self.assertEqual(initial_file, tmp_file)
 
-        mock_requests.post.assert_called_with(f"{PLATO_HOST}/template/{template_id}/compose",
+        mock_requests.post.assert_called_with(f"{PLATO_HOST}/templates/{template_id}/compose",
                                               headers={'accept': 'application/pdf'},
                                               json=self.compose_data, params={}, timeout=DEFAULT_TIMEOUT)
