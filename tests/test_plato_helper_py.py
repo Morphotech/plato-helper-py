@@ -544,16 +544,17 @@ class TestPlatoHelper(TestCase):
         mock_requests.post.return_value = mock_response
         template_id = "ranger_certificate"
 
-        with self.assertRaises(TypeError), NamedTemporaryFile(suffix=".pdf") as tmp_file:
-            self.plato_helper.compose_to_file(
-                template_id=template_id,
-                compose_data=self.compose_data,
-                composed_file_target=tmp_file.name,
-                mime_type="application/pdf",
-                page=1,
-                wrong_param="wrong",
-            )
-            self.assertEqual(tmp_file.read(), expected_file)
+        with NamedTemporaryFile(suffix=".pdf") as tmp_file:
+            with self.assertRaises(TypeError):
+                self.plato_helper.compose_to_file(
+                    template_id=template_id,
+                    compose_data=self.compose_data,
+                    composed_file_target=tmp_file.name,
+                    mime_type="application/pdf",
+                    page=1,
+                    wrong_param="wrong",
+                )
+            self.assertNotEqual(tmp_file.read(), expected_file)
         mock_requests.post.assert_not_called()
 
     @patch("plato_helper_py.api.requests")
@@ -562,11 +563,12 @@ class TestPlatoHelper(TestCase):
         self.plato_helper.max_tries = 1
         template_id = "ranger_certificate"
 
-        with self.assertRaises(PlatoUnavailable), NamedTemporaryFile(suffix=".pdf") as tmp_file:
+        with NamedTemporaryFile(suffix=".pdf") as tmp_file:
             initial_file = tmp_file
-            self.plato_helper.compose_to_file(
-                template_id=template_id, compose_data=self.compose_data, composed_file_target=tmp_file.name
-            )
+            with self.assertRaises(PlatoUnavailable):
+                self.plato_helper.compose_to_file(
+                    template_id=template_id, compose_data=self.compose_data, composed_file_target=tmp_file.name
+                )
             self.assertEqual(initial_file, tmp_file)
 
         mock_requests.post.assert_called_with(
@@ -585,11 +587,14 @@ class TestPlatoHelper(TestCase):
         mock_requests.post.return_value = mock_response
 
         template_id = "ranger_certificate"
-        with self.assertRaises(PlatoError), NamedTemporaryFile(suffix=".pdf") as tmp_file:
+        with NamedTemporaryFile(suffix=".pdf") as tmp_file:
             initial_file = tmp_file
-            self.plato_helper.compose_to_file(
-                template_id=template_id, compose_data=self.compose_data, composed_file_target=tmp_file.name
-            )
+
+            with self.assertRaises(PlatoError):
+                self.plato_helper.compose_to_file(
+                    template_id=template_id, compose_data=self.compose_data, composed_file_target=tmp_file.name
+                )
+
             self.assertEqual(initial_file, tmp_file)
 
         mock_requests.post.assert_called_with(
