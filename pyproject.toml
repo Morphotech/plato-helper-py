@@ -8,7 +8,7 @@ authors = [
     {name = "Le Hong Hieu"},
     {name = "Rita Mariquitos", email = "rita.mariquitos@morphotech.com"}
 ]
-requires-python = ">=3.8,<4.0"
+requires-python = ">=3.9,<4.0"
 dependencies = [
     "requests>=2.27,<3.0",
     "backoff>=2.2,<3.0",
@@ -17,31 +17,19 @@ dependencies = [
 
 [tool.ruff]
 line-length = 120
-target-version = "py38"
+target-version = "py39"
 
 [tool.poetry.group.dev.dependencies]
 
 # Static Typing
-mypy = [
-    {version = "^1.1.1", python = ">=3.8,<3.9"},
-    {version = "^1.17", python = ">=3.9"}
-]
+mypy = "^1.17"
 mypy-extensions="^1.0.0"
 typing-extensions="^4.3"
 
 ruff = "^0.16"
-coverage = [
-    {version = "^7.2.2", python = ">=3.8,<3.9"},
-    {version = ">=7.6.12,<7.16", python = ">=3.9"}
-]
-tox = [
-    {version = "^4.4.9", python = ">=3.8,<3.9"},
-    {version = ">=4.30.3,<4.61", python = ">=3.9"}
-]
-cyclonedx-bom = [
-    {version = "^3.6", python = ">=3.8,<3.9"},
-    {version = "^7.3", python = ">=3.9"}
-]
+coverage = ">=7.6.12,<7.16"
+tox = ">=4.30.3,<4.61"
+cyclonedx-bom = "^7.3"
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]

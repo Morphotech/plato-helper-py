@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Sequence
 from functools import wraps
 from http import HTTPStatus
-from typing import Any, BinaryIO, Callable, NamedTuple, Sequence, TypeVar, cast
+from typing import Any, BinaryIO, Callable, NamedTuple, TypeVar, cast
 
 import backoff
 import requests

@@ -1,7 +1,7 @@
 # Plato-Helper-Py
 
 Plato-Helper-Py is an auxiliary Python helper library that provides interaction with the Plato API. 
-It is compatible with Python versions 3.8 through 3.14.
+It is compatible with Python versions 3.9 through 3.14.
 
 ## Usage ##
 
@@ -42,21 +42,20 @@ file = plato.compose(template_id=<template_id>,
 ### Prerequisites ###
 
 - Pyenv
-- Python 3.8+, up to 3.14 (included)
+- Python 3.9+, up to 3.14 (included)
 - Python Poetry
 
 ### Setup environment for development ###
 
 1. Setup a Python version on your local environment
 ```shell
-pyenv install 3.8.13
 pyenv install 3.9.8
 pyenv install 3.10.4
 pyenv install 3.11.14
 pyenv install 3.12.12
 pyenv install 3.13.9
 pyenv install 3.14.0
-pyenv local 3.8.13 3.9.8 3.10.4 3.11.14 3.12.12 3.13.9 3.14.0
+pyenv local 3.9.8 3.10.4 3.11.14 3.12.12 3.13.9 3.14.0
 ``` 
 2. Install dependencies
 ```shell
