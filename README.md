@@ -89,9 +89,11 @@ pylint --rcfile=conf/.pylintrc plato_helper_py
 
 ## Continuous Integration ##
 
-CI runs on GitHub Actions (see `.github/workflows/`): `test.yml` runs the unit tests across every supported Python 
-version, plus mypy, pylint, coverage and a SonarQube scan, on every push/PR. `publish.yml` builds and publishes to 
-PyPI whenever a version tag (e.g. `2.1.1`) is pushed.
+CI runs on GitHub Actions (see `.github/workflows/`). `test.yml` runs the unit tests across every supported Python 
+version, plus mypy, pylint, coverage and a SonarQube scan; it triggers directly on every PR, and is also called by 
+`ci.yml` on every push to `develop`/`release/**`/`hotfix/**` and on version tags. `ci.yml` additionally calls 
+`publish.yml` to build and publish to PyPI, but only when the push is a version tag (e.g. `2.1.1`). `ci.yml` can also 
+be triggered manually from the Actions tab.
 
 ## Authors ##
 

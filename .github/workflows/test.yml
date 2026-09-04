@@ -1,0 +1,76 @@
+name: Tests
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - "feature/**"
+      - "release/**"
+      - "hotfix/**"
+  workflow_call:
+
+jobs:
+  test:
+    name: Run Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: "3.8"
+            poetry-version: "1.5.1"
+          - python-version: "3.9"
+            poetry-version: "2.1.2"
+          - python-version: "3.10"
+            poetry-version: "2.1.2"
+          - python-version: "3.11"
+            poetry-version: "2.1.2"
+          - python-version: "3.12"
+            poetry-version: "2.1.2"
+          - python-version: "3.13"
+            poetry-version: "2.1.2"
+          - python-version: "3.14"
+            poetry-version: "2.1.2"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Poetry
+        run: pip install poetry==${{ matrix.poetry-version }}
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run tests
+        run: poetry run python -m unittest -v
+
+  quality:
+    name: Lint, Type Check & Sonar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        run: pip install poetry==2.1.2
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run quality checks
+        run: |
+          poetry run mypy --config-file conf/mypy.ini plato_helper_py
+          poetry run pylint --rcfile=conf/.pylintrc plato_helper_py
+          poetry run coverage run -m unittest
+          poetry run coverage xml -i -o plato_helper_py/coverage/coverage.xml
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6.0.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
