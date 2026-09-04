@@ -199,7 +199,7 @@ class PlatoHelper:
         """
         headers = {**{"accept": mime_type}}
         query_params = RequestDict(page=page, height=resize_height, width=resize_width)
-        response = requests.post(f"{self.plato_host}/template/{template_id}/compose",
+        response = requests.post(f"{self.plato_host}/templates/{template_id}/compose",
                                  headers=headers,
                                  json=compose_data,
                                  params=query_params,
@@ -238,7 +238,7 @@ class PlatoHelper:
         headers = {**{"accept": mime_type}}
         query_params = RequestDict(page=page, height=resize_height, width=resize_width)
 
-        response = requests.get(f"{self.plato_host}/template/{template_id}/example",
+        response = requests.get(f"{self.plato_host}/templates/{template_id}/example",
                                 headers=headers,
                                 params=query_params,
                                 timeout=DEFAULT_TIMEOUT
