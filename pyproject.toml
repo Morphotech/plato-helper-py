@@ -2,26 +2,41 @@
 name = "plato-helper-py"
 version = "2.1.1"
 description = "Helper for the Plato microservice"
-authors = ["Tiago Santos <tiago.santos@vizidox.com>", "Joana Teixeira <joana.teixeira@vizidox.com>", "Le Hong Hieu <hieu.le@morphotech.co.uk>", "Rita Mariquitos <rita.mariquitos@morphotech.co.uk>"]
+authors = ["Tiago Santos", "Joana Teixeira <joana.teixeira@morphotech.com>", "Le Hong Hieu", "Rita Mariquitos <rita.mariquitos@morphotech.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.7.2"
+python = "^3.8"
 
 requests="^2.27"
 backoff="^2.2"
 types-requests = "^2.28.11"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 
 # Static Typing
-mypy="^1.1.1"
+mypy = [
+    {version = "^1.1.1", python = ">=3.8,<3.9"},
+    {version = "^1.17", python = ">=3.9"}
+]
 mypy-extensions="^1.0.0"
 typing-extensions="^4.3"
 
-pylint = "^2.15"
-coverage = "^7.2.2"
-tox = "^4.4.9"
-cyclonedx-bom="^3.6"
+pylint = [
+    {version = "^2.15", python = ">=3.8,<3.10"},
+    {version = "^4.0", python = ">=3.10"}
+]
+coverage = [
+    {version = "^7.2.2", python = ">=3.8,<3.9"},
+    {version = ">=7.6.12,<7.16", python = ">=3.9"}
+]
+tox = [
+    {version = "^4.4.9", python = ">=3.8,<3.9"},
+    {version = ">=4.30.3,<4.61", python = ">=3.9"}
+]
+cyclonedx-bom = [
+    {version = "^3.6", python = ">=3.8,<3.9"},
+    {version = "^7.3", python = ">=3.9"}
+]
 
 [build-system]
 requires = ["poetry-core>=1.2.0"]

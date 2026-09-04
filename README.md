@@ -1,7 +1,7 @@
 # Plato-Helper-Py
 
 Plato-Helper-Py is an auxiliary Python helper library that provides interaction with the Plato API. 
-It is compatible with Python versions 3.7 through 3.9.
+It is compatible with Python versions 3.8 through 3.14.
 
 ## Usage ##
 
@@ -42,18 +42,21 @@ file = plato.compose(template_id=<template_id>,
 ### Prerequisites ###
 
 - Pyenv
-- Python 3.7.2+, up to 3.9 (included)
+- Python 3.8+, up to 3.14 (included)
 - Python Poetry
-- Docker + Docker-compose
 
 ### Setup environment for development ###
 
 1. Setup a Python version on your local environment
 ```shell
-pyenv install 3.7.7
-pyenv install 3.8.12
+pyenv install 3.8.13
 pyenv install 3.9.8
-pyenv local 3.7.7 3.8.12 3.9.8
+pyenv install 3.10.4
+pyenv install 3.11.14
+pyenv install 3.12.12
+pyenv install 3.13.9
+pyenv install 3.14.0
+pyenv local 3.8.13 3.9.8 3.10.4 3.11.14 3.12.12 3.13.9 3.14.0
 ``` 
 2. Install dependencies
 ```shell
@@ -84,14 +87,11 @@ mypy --config-file conf/mypy.ini plato_helper_py
 pylint --rcfile=conf/.pylintrc plato_helper_py
 ```
 
-Finally, if you just want to run the tests within a docker container, without setting up the local environment, run 
-the following command. However, bear in mind that the docker process changes the ownership of the plato_helper_py/coverage 
-directory and the .coverage file to root. As such, they will not be modifiable without root access and any subsequent 
-tox command will fail. Just delete both with sudo to proceed as usual.
-```shell
-docker-compose build
-docker-compose run --rm plato-helper
-```
+## Continuous Integration ##
+
+CI runs on GitHub Actions (see `.github/workflows/`): `test.yml` runs the unit tests across every supported Python 
+version, plus mypy, pylint, coverage and a SonarQube scan, on every push/PR. `publish.yml` builds and publishes to 
+PyPI whenever a version tag (e.g. `2.1.1`) is pushed.
 
 ## Authors ##
 
