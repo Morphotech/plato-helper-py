@@ -1,1 +1,1 @@
-from .api import PlatoHelper
+from .api import PlatoHelper as PlatoHelper

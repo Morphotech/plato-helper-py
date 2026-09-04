@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 import json
 from functools import wraps
 from http import HTTPStatus
-from typing import NamedTuple, Sequence, List, Optional, BinaryIO, Callable, TypeVar, Any, cast
+from typing import Any, BinaryIO, Callable, NamedTuple, Sequence, TypeVar, cast
 
 import backoff
 import requests
@@ -10,7 +12,7 @@ from plato_helper_py.request_collections import RequestDict
 
 DEFAULT_TIMEOUT = 10
 
-F = TypeVar('F', bound=Callable[..., Any])
+F = TypeVar("F", bound=Callable[..., Any])
 
 
 class PlatoUnavailable(Exception):
@@ -42,6 +44,7 @@ def catch_connection_error(f: F) -> F:
     :return: The decorator function
     :rtype: F
     """
+
     @wraps(f)
     def wrapper(plato_helper: Any, *args: Any, **kwargs: Any) -> Any:
         """
@@ -74,6 +77,7 @@ def catch_connection_error(f: F) -> F:
             return call_plato_method()
         except ConnectionError as e:
             raise PlatoUnavailable(e) from e
+
     return cast(F, wrapper)
 
 
@@ -99,11 +103,12 @@ class TemplateInfo(NamedTuple):
             items:
                 type: string
     """
+
     template_id: str
     template_schema: dict
     type: str
     metadata: dict
-    tags: List[str]
+    tags: list[str]
 
 
 class PlatoHelper:
@@ -120,7 +125,7 @@ class PlatoHelper:
         self.max_tries = max_tries
 
     @catch_connection_error
-    def templates(self, tags: List[str]) -> Sequence[TemplateInfo]:
+    def templates(self, tags: list[str]) -> Sequence[TemplateInfo]:
         """
         Retrieves your templates from the API.
 
@@ -135,10 +140,7 @@ class PlatoHelper:
         if tags:
             params["tags"] = tags
 
-        response = requests.get(f"{self.plato_host}/templates/",
-                                params=params,
-                                timeout=DEFAULT_TIMEOUT
-                                )
+        response = requests.get(f"{self.plato_host}/templates/", params=params, timeout=DEFAULT_TIMEOUT)
 
         if response.status_code != HTTPStatus.OK:
             raise PlatoError(response.status_code, response.text)
@@ -156,9 +158,7 @@ class PlatoHelper:
         :return: TemplateInfo on the template
         :rtype: TemplateInfo
         """
-        response = requests.get(f"{self.plato_host}/templates/{template_id}",
-                                timeout=DEFAULT_TIMEOUT
-                                )
+        response = requests.get(f"{self.plato_host}/templates/{template_id}", timeout=DEFAULT_TIMEOUT)
 
         if response.status_code != HTTPStatus.OK:
             raise PlatoError(response.status_code, response.text)
@@ -166,13 +166,15 @@ class PlatoHelper:
         return TemplateInfo(**response.json())
 
     @catch_connection_error
-    def compose(self, template_id: str,
-                compose_data: dict,
-                mime_type: str = "application/pdf",
-                page: Optional[int] = None,
-                resize_height: Optional[int] = None,
-                resize_width: Optional[int] = None
-                ) -> bytes:
+    def compose(
+        self,
+        template_id: str,
+        compose_data: dict,
+        mime_type: str = "application/pdf",
+        page: int | None = None,
+        resize_height: int | None = None,
+        resize_width: int | None = None,
+    ) -> bytes:
         """
         Makes a request for the template to be composed and returns the bytes for the file.
 
@@ -197,14 +199,15 @@ class PlatoHelper:
         :return: Bytes for the composed file
         :rtype: bytes
         """
-        headers = {**{"accept": mime_type}}
+        headers = {"accept": mime_type}
         query_params = RequestDict(page=page, height=resize_height, width=resize_width)
-        response = requests.post(f"{self.plato_host}/templates/{template_id}/compose",
-                                 headers=headers,
-                                 json=compose_data,
-                                 params=query_params,
-                                 timeout=DEFAULT_TIMEOUT
-                                 )
+        response = requests.post(
+            f"{self.plato_host}/templates/{template_id}/compose",
+            headers=headers,
+            json=compose_data,
+            params=query_params,
+            timeout=DEFAULT_TIMEOUT,
+        )
 
         if response.status_code != HTTPStatus.OK:
             raise PlatoError(response.status_code, response.text)
@@ -212,11 +215,14 @@ class PlatoHelper:
         return response.content
 
     @catch_connection_error
-    def template_example(self, template_id: str,
-                         mime_type: str = "application/pdf",
-                         page: Optional[int] = None,
-                         resize_height: Optional[int] = None,
-                         resize_width: Optional[int] = None) -> bytes:
+    def template_example(
+        self,
+        template_id: str,
+        mime_type: str = "application/pdf",
+        page: int | None = None,
+        resize_height: int | None = None,
+        resize_width: int | None = None,
+    ) -> bytes:
         """
         Makes a request for the template to be composed and returns the bytes for the file.
 
@@ -235,14 +241,15 @@ class PlatoHelper:
         :param resize_height: The width for resizing the template
         :type resize_height: Optional[int]
         """
-        headers = {**{"accept": mime_type}}
+        headers = {"accept": mime_type}
         query_params = RequestDict(page=page, height=resize_height, width=resize_width)
 
-        response = requests.get(f"{self.plato_host}/templates/{template_id}/example",
-                                headers=headers,
-                                params=query_params,
-                                timeout=DEFAULT_TIMEOUT
-                                )
+        response = requests.get(
+            f"{self.plato_host}/templates/{template_id}/example",
+            headers=headers,
+            params=query_params,
+            timeout=DEFAULT_TIMEOUT,
+        )
 
         if response.status_code != HTTPStatus.OK:
             raise PlatoError(response.status_code, response.text)
@@ -268,10 +275,7 @@ class PlatoHelper:
 
         data = RequestDict(zipfile=file_stream, template_details=template_details_str)
 
-        response = requests.post(f"{self.plato_host}/template/create",
-                                 data=data,
-                                 timeout=DEFAULT_TIMEOUT
-                                 )
+        response = requests.post(f"{self.plato_host}/template/create", data=data, timeout=DEFAULT_TIMEOUT)
 
         if response.status_code != HTTPStatus.CREATED:
             raise PlatoError(response.status_code, response.text)
@@ -300,10 +304,7 @@ class PlatoHelper:
         template_details_str = json.dumps(template_details)
         data = RequestDict(zipfile=file_stream, template_details=template_details_str)
 
-        response = requests.put(f"{self.plato_host}/template/{template_id}/update",
-                                data=data,
-                                timeout=DEFAULT_TIMEOUT
-                                )
+        response = requests.put(f"{self.plato_host}/template/{template_id}/update", data=data, timeout=DEFAULT_TIMEOUT)
 
         if response.status_code != HTTPStatus.OK:
             raise PlatoError(response.status_code, response.text)
@@ -325,18 +326,18 @@ class PlatoHelper:
         :rtype: TemplateInfo
         """
 
-        response = requests.patch(f"{self.plato_host}/template/{template_id}/update_details",
-                                  json=template_details,
-                                  timeout=DEFAULT_TIMEOUT
-                                  )
+        response = requests.patch(
+            f"{self.plato_host}/template/{template_id}/update_details", json=template_details, timeout=DEFAULT_TIMEOUT
+        )
 
         if response.status_code != HTTPStatus.OK:
             raise PlatoError(response.status_code, response.text)
 
         return TemplateInfo(**response.json())
 
-    def compose_to_file(self, template_id: str, compose_data: dict, composed_file_target: str, *args: Any,
-                        **kwargs: Any) -> None:
+    def compose_to_file(
+        self, template_id: str, compose_data: dict, composed_file_target: str, *args: Any, **kwargs: Any
+    ) -> None:
         """
         Makes a request for the template to be composed and writes the result to a file.
 
@@ -357,5 +358,5 @@ class PlatoHelper:
         """
         composed_content = self.compose(template_id, compose_data, *args, **kwargs)
 
-        with open(composed_file_target, mode='wb') as output:
+        with open(composed_file_target, mode="wb") as output:
             output.write(composed_content)
