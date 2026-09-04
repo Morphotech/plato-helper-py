@@ -54,7 +54,7 @@ jobs:
           poetry run mypy --config-file conf/mypy.ini plato_helper_py
           poetry run ruff check plato_helper_py tests
           poetry run coverage run -m unittest
-          poetry run coverage xml -i -o plato_helper_py/coverage/coverage.xml
+          poetry run coverage xml -i -o coverage/coverage.xml
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6.0.0
