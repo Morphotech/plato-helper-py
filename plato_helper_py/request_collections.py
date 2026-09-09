@@ -14,6 +14,7 @@ class RequestDict(UserDict):
     >>> dict_
     {}
     """
+
     def __setitem__(self, key: Any, value: Any) -> None:
         """
         Set the value of the dictionary
